@@ -6,11 +6,11 @@
 #include <cassert>
 #include <ctime>
 
-const int NUM_STEPS = 999999999; 
-const int NUM_THREADS = 8;
-
 namespace
 {
+	const int NUM_STEPS = 999999999;
+	const int NUM_THREADS = 8;
+
 	double calculateLeibnizPi(const int start, const int end)
 	{
 		assert(start >= 0);
@@ -38,7 +38,7 @@ int main(int argc, char** argv)
 
 	for (int i = 0; i < NUM_THREADS; i++)
 	{
-		auto f = std::async(calculateLeibnizPi,
+		auto f = std::async(std::launch::async, calculateLeibnizPi,
 			i * (NUM_STEPS / NUM_THREADS),
 			(i + 1) * (NUM_STEPS / NUM_THREADS));
 		futureContainer.push_back(std::move(f));
