@@ -2,6 +2,7 @@
 #include <thread>
 #include <vector>
 #include <chrono>
+#include <cassert>
 
 namespace input
 {
@@ -10,6 +11,7 @@ namespace input
 
     std::string generateRandomString(const int length)
     {
+        assert(length > 0);
         static const char alphanum[] =
             "0123456789"
             "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -42,9 +44,13 @@ namespace input
 
 namespace sleepsort
 {
-    void sleepPrint(const std::string line)
+    void sleepPrint(const std::string& line)
     {
+        assert(line != "");
+        
         size_t length = line.size();
+        assert(length > 0);
+
         std::this_thread::sleep_for(std::chrono::seconds(length));
 
         printf("\t%s\n", line.c_str());
@@ -53,7 +59,7 @@ namespace sleepsort
     void printLinesBeforeSorting(const std::vector<std::string>& lines)
     {
         printf("List before the Sleepsort:\n");
-        for (const std::string line : lines)
+        for (const std::string& line : lines)
         {
             printf("\t%s \n", line.c_str());
         }
@@ -61,15 +67,16 @@ namespace sleepsort
 
     void run(const std::vector<std::string>& lines)
     {
+        assert(lines.size() > 0);
         printLinesBeforeSorting(lines);
 
         printf("Sorted result:\n");
         std::vector<std::thread> threads;
+        threads.reserve(lines.size());
 
-        for (const std::string line : lines)
+        for (const std::string& line : lines)
         {
-            std::thread th(sleepsort::sleepPrint, line);
-            threads.push_back(std::move(th));
+            threads.emplace_back(std::thread(sleepsort::sleepPrint, std::ref(line)));
         }
 
         for (std::thread& th : threads)
@@ -84,7 +91,7 @@ namespace sleepsort
 
 int main()
 {
-    srand((unsigned)time(NULL));
+    srand(static_cast<unsigned>(time(nullptr)));
 
     std::vector<std::string> lines = input::generateInput();
     sleepsort::run(lines);
