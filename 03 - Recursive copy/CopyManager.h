@@ -4,17 +4,22 @@
 #include <iostream>
 #include <filesystem>
 #include <thread>
+#include <future>
+#include <mutex>
+#include <cassert>
 
 namespace fs = std::filesystem;
 
 class CopyManager
 {
 public:
-	static bool copyDir(const fs::path& sourceDir, const fs::path& targetDir);
+	void run(const fs::path& sourceDir, const fs::path& targetDir);
+	bool copyDir(const fs::path& sourceDir, const fs::path& targetDir);
 private:
-	static void loopDir(const fs::path& sourceDir, const fs::path& targetDir, const fs::directory_entry& item);
-	static void copyFile(const fs::path& item, const fs::path& targetDir);
+	void loopDir(const fs::path sourceDir, const fs::path targetDir);
+	void copyFile(const fs::path& item, const fs::path& targetDir);
 
-	std::vector<std::thread> activeThreads;
+	std::vector<std::future<void>> futureThreads;
+	std::mutex m;
 };
 

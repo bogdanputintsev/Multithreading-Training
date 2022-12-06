@@ -1,10 +1,20 @@
 #include "CopyManager.h"
 
+void CopyManager::run(const fs::path& sourceDir, const fs::path& targetDir)
+{
+	copyDir(sourceDir, targetDir);
+
+	for (auto & f : futureThreads)
+	{
+		f.get();
+	}
+}
+
 bool CopyManager::copyDir(const fs::path& sourceDir, const fs::path& targetDir)
 {
 	if (!fs::exists(sourceDir) || !fs::exists(targetDir))
 	{
-		std::cout << "The path is not exist.\n";
+		std::cout << "The directory doesn't exist.\n";
 		return false;
 	}
 
@@ -14,27 +24,38 @@ bool CopyManager::copyDir(const fs::path& sourceDir, const fs::path& targetDir)
 		return false;
 	}
 
-	for (const auto& item : fs::directory_iterator(sourceDir))
-	{
-		fs::path filename = item.path().filename();
-	}
-
+	std::lock_guard<std::mutex> lock(m);
+	futureThreads.emplace_back(std::async(std::launch::async, &CopyManager::loopDir, this, sourceDir, targetDir));
 	return true;
 }
 
-void CopyManager::loopDir(const fs::path& sourceDir, const fs::path& targetDir, const fs::directory_entry& item)
+void CopyManager::loopDir(const fs::path sourceDir, const fs::path targetDir)
 {
-	fs::path filename = item.path().filename();
+	assert(fs::exists(sourceDir));
+	assert(fs::is_directory(sourceDir));
+	assert(fs::exists(targetDir));
+	assert(fs::is_directory(sourceDir));
 
-	if (fs::is_directory(item))
+	for (const auto& item : fs::directory_iterator(sourceDir))
 	{
-		std::cout << "\t" << (sourceDir / filename) << '\n';
-		fs::create_directory(targetDir / filename);
-		copyDir(sourceDir / filename, targetDir / filename);
-	}
-	else if (fs::is_regular_file(item))
-	{
-		copyFile(item, targetDir);
+		assert(fs::exists(item));
+
+		fs::path filename = item.path().filename();
+
+		if (fs::is_directory(item))
+		{
+			//std::cout << "\t" << (sourceDir / filename) << '\n';
+			fs::create_directory(targetDir / filename);
+
+			assert(fs::exists(targetDir / filename));
+			assert(fs::is_directory(targetDir / filename));
+
+			copyDir(sourceDir / filename, targetDir / filename);
+		}
+		else if (fs::is_regular_file(item))
+		{
+			//copyThreads.push_back(std::move(std::thread(CopyManager::copyFile, std::ref(item), std::ref(targetDir))));
+		}
 	}
 }
 
