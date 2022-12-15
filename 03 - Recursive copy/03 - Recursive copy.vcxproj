@@ -129,12 +129,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="03 - Recursive copy.cpp" />
-    <ClCompile Include="CopyManager.cpp" />
-    <ClCompile Include="RecursiveFileGenerator.cpp" />
+    <ClCompile Include="FileManager.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CopyManager.h" />
-    <ClInclude Include="RecursiveFileGenerator.h" />
+    <ClInclude Include="FileManager.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
