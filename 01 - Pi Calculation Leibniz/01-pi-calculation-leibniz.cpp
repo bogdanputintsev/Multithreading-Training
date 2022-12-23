@@ -9,7 +9,7 @@
 namespace
 {
 	const int NUM_STEPS = 999999999;
-	const int NUM_THREADS = 8;
+	const int NUM_THREADS = 11;
 
 	double calculateLeibnizPi(const int start, const int end)
 	{

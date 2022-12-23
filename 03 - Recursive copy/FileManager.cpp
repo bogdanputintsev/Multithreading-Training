@@ -2,8 +2,6 @@
 
 #include <iostream>
 
-#define MULTITHREADING 0
-
 FileManager::FileManager()
 {
 	srand(static_cast<unsigned>(time(nullptr)));
@@ -11,38 +9,38 @@ FileManager::FileManager()
 
 void FileManager::run(const fs::path& sourceDir, const fs::path& targetDir)
 {
-	assert(fs::exists(sourceDir));
-	assert(fs::exists(targetDir));
-	assert(fs::is_directory(sourceDir));
-	assert(fs::is_directory(targetDir));
-
 	std::cout << "Calculating number of items to copy...\n";
-
-	for (const auto& item : fs::recursive_directory_iterator(sourceDir))
-	{
-		pathsToCopy.emplace_back(item.path());
-	}
+	collectAllPathsToCopy(sourceDir);
 
 	std::cout << "There are " << pathsToCopy.size() << " items to copy.\n";
+	copyAllPaths(sourceDir, targetDir);
+}
 
+void FileManager::collectAllPathsToCopy(const fs::path& sourceDir)
+{
+	try
+	{
+		for (const auto& item : fs::recursive_directory_iterator(sourceDir))
+		{
+			pathsToCopy.emplace_back(item.path());
+		}
+	}
+	catch (fs::filesystem_error& error)
+	{
+		std::cout << error.what() << '\n';
+		abort();
+	}
+}
+
+void FileManager::copyAllPaths(const fs::path& sourceDir, const fs::path& targetDir)
+{
 	for (const auto& path : pathsToCopy)
 	{
 		const fs::path copyFrom = path;
 		const fs::path copyTo = getTargetPathFromSourcePath(sourceDir, targetDir, path);
 
-#if MULTITHREADING
-		futureThreads.emplace_back(std::async(std::launch::async, &FileManager::copyFile, this, copyFrom, copyTo));
-#else
 		copyFile(copyFrom, copyTo);
-#endif
 	}
-
-#if MULTITHREADING
-	for (auto& future : futureThreads)
-	{
-		future.get();
-	}
-#endif
 }
 
 fs::path FileManager::getTargetPathFromSourcePath(const fs::path& sourceDir, const fs::path& targetDir, const fs::path& absolutePath)
@@ -56,7 +54,7 @@ std::string FileManager::getRelativePath(const std::string& absolutePath, const 
 	return absolutePath.substr(length);
 }
 
-void FileManager::copyFile(const fs::path& item, const fs::path& targetDir) const
+void FileManager::copyFile(const fs::path& item, const fs::path& targetDir)
 {
 	if (fs::is_directory(item))
 	{
@@ -77,12 +75,14 @@ void FileManager::copyFile(const fs::path& item, const fs::path& targetDir) cons
 	}
 	catch (fs::filesystem_error& e)
 	{
-		std::cout << e.what() << '\n';
+		std::cout << e.what() << "\n\n";
 	}
 }
 
 void FileManager::generateTree(const fs::path& path)
 {
+	srand(static_cast<unsigned>(time(nullptr)));
+	std::cout << "Spawning recursive tree at " << path.string() << '\n';
 	spawn(path, 0);
 }
 
@@ -157,9 +157,20 @@ int FileManager::randomIntInRange(const int from, const int to)
 
 void FileManager::removeDir(const fs::path& sourceDir)
 {
-	for (const auto& item : fs::directory_iterator(sourceDir))
+	std::cout << "Clearing directory: " << sourceDir.string() << '\n';
+
+	try
 	{
-		fs::remove_all(item);
+		for (auto& item : fs::directory_iterator(sourceDir))
+		{
+			std::cout << '\t' << item.path().string() << '\n';
+			fs::remove_all(item);
+		}
+	}
+	catch (fs::filesystem_error& error)
+	{
+		std::cout << error.what() << '\n';
+		abort();
 	}
 }
 
