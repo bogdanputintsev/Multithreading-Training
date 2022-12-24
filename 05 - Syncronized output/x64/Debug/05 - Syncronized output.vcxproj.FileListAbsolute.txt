@@ -1,0 +1,1 @@
+D:\Projects\C++\Multithreading-Training\05 - Syncronized output\x64\Debug\05 - Syncronized output.exe
