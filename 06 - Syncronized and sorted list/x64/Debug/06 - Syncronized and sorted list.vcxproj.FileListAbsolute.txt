@@ -1,0 +1,1 @@
+D:\Projects\C++\Multithreading-Training\06 - Syncronized and sorted list\x64\Debug\06 - Syncronized and sorted list.exe
