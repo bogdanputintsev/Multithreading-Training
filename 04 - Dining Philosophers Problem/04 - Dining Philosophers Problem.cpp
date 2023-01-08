@@ -2,7 +2,7 @@
 
 int main()
 {
-	PhilosphersTable table;
+	PhilosophersTable table;
 	table.startDinner();
 
 	return EXIT_SUCCESS;
