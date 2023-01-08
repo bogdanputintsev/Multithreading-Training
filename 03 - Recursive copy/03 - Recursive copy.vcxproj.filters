@@ -18,18 +18,18 @@
     <ClCompile Include="03 - Recursive copy.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="FileManager.cpp">
+    <ClCompile Include="source\FileManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ParallelFileManager.cpp">
+    <ClCompile Include="source\ParallelFileManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="FileManager.h">
+    <ClInclude Include="source\FileManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ParallelFileManager.h">
+    <ClInclude Include="source\ParallelFileManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
