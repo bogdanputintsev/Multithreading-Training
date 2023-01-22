@@ -124,7 +124,6 @@ std::string FileManager::getRandomName(const int length)
 
 void FileManager::createFolder(const fs::path& folderPath, const std::string& newFolderName)
 {
-	assert(fs::exists(folderPath) && fs::is_directory(folderPath));
 	assert(!newFolderName.empty());
 
 	try
@@ -139,7 +138,6 @@ void FileManager::createFolder(const fs::path& folderPath, const std::string& ne
 
 void FileManager::createFile(const fs::path& folderPath, const std::string& newFileName)
 {
-	assert(fs::exists(folderPath) && fs::is_directory(folderPath));
 	assert(!newFileName.empty());
 
 	std::ofstream ofs(folderPath / newFileName);
