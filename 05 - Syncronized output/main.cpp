@@ -28,7 +28,7 @@ private:
 			printLine(i);
 
 			lastActiveThread = threadType;
-			sleepCondition.notify_one();
+			sleepCondition.notify_all();
 		}
 	}
 
