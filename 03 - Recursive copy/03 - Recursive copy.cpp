@@ -34,7 +34,6 @@ int main()
 
 	const double elapsedTimeMs = std::chrono::duration<double, std::milli>(end - start).count();
 	std::cout << "Estimated time: " << elapsedTimeMs << "ms.\n";
-	
-	
+
 	return EXIT_SUCCESS;
 }

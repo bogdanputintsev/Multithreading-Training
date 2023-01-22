@@ -143,6 +143,11 @@ void FileManager::createFile(const fs::path& folderPath, const std::string& newF
 	assert(!newFileName.empty());
 
 	std::ofstream ofs(folderPath / newFileName);
+	if (!ofs)
+	{
+		std::cout << "Failed to create file " << newFileName << '\n';
+		return;
+	}
 
 	const int stringLength = randomIntInRange(1, MAX_STRING_LENGTH);
 	ofs << getRandomName(stringLength) << '\n';
