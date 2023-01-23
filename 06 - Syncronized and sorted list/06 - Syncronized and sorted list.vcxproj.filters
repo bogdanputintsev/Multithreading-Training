@@ -15,39 +15,39 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
+    <ClCompile Include="source\BubbleSort.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="SyncronizedList.cpp">
+    <ClCompile Include="source\Data.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="InputManager.cpp">
+    <ClCompile Include="source\InputManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="SortAlgorithm.cpp">
+    <ClCompile Include="source\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="BubbleSort.cpp">
+    <ClCompile Include="source\SortAlgorithm.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Data.cpp">
+    <ClCompile Include="source\SynchronizedList.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="SyncronizedList.h">
+    <ClInclude Include="source\BubbleSort.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="InputManager.h">
+    <ClInclude Include="source\Data.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="SortAlgorithm.h">
+    <ClInclude Include="source\InputManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="BubbleSort.h">
+    <ClInclude Include="source\SortAlgorithm.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Data.h">
+    <ClInclude Include="source\SynchronizedList.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

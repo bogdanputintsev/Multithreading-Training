@@ -1,2 +1,8 @@
-﻿  SyncronizedList.cpp
+﻿  BubbleSort.cpp
+  Data.cpp
+  InputManager.cpp
+  main.cpp
+  SortAlgorithm.cpp
+  SynchronizedList.cpp
+  Generating Code...
   06 - Syncronized and sorted list.vcxproj -> D:\Projects\C++\Multithreading-Training\06 - Syncronized and sorted list\x64\Debug\06 - Syncronized and sorted list.exe
