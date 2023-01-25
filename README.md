@@ -2,7 +2,7 @@
 
 A project to learn in detail about multithreaded programming with my mentor.
 
-## 01 = Pi Calculation Leibniz
+## 01 - Pi Calculation Leibniz
 Write a program that calculates pi using Leibniz's series. The number of threads of the program must be determined by the command line parameter. The number of iterations can be determined at compile time. 
 
 ## 02 - Sleepsort
