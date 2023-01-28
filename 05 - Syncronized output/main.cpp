@@ -6,8 +6,8 @@ class SynchronizedOutput final
 public:
 	void run()
 	{
-		std::thread thread(&SynchronizedOutput::printLines, this, 1, ThreadType::CHILD);
-		printLines(0, ThreadType::PARENT);
+		std::thread thread(&SynchronizedOutput::printLines, this, CHILD_IDX, ThreadType::CHILD);
+		printLines(PARENT_IDX, ThreadType::PARENT);
 		thread.join();
 	}
 
@@ -20,7 +20,7 @@ private:
 
 	void printLines(const int idx, const ThreadType threadType)
 	{
-		for (int i = idx; i < idx + LINES_PER_THREAD * 2; i += 2)
+		for (int i = idx; i < idx + LINES_PER_THREAD * NUM_THREADS; i += NUM_THREADS)
 		{
 			std::unique_lock<std::mutex> lock{ printMutex };
 			sleepCondition.wait(lock, [=]() { return threadType != lastActiveThread; });
@@ -40,6 +40,9 @@ private:
 	
 	static constexpr std::chrono::milliseconds SLEEP_DURATION_MS = std::chrono::milliseconds(50);
 	static constexpr int LINES_PER_THREAD = 30;
+	static constexpr int NUM_THREADS = 2;
+	static constexpr int PARENT_IDX = 0;
+	static constexpr int CHILD_IDX = 1;
 
 	std::condition_variable sleepCondition;
 	std::mutex printMutex;
