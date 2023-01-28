@@ -4,7 +4,11 @@
 
 SynchronizedList::~SynchronizedList()
 {
-	sortThread.join();
+	if (sortThread.joinable())
+	{
+		sortThread.join();
+	}
+	
 	const Data* data = front;
 	while (data != nullptr)
 	{
@@ -23,7 +27,7 @@ SynchronizedList::~SynchronizedList()
  * Method that starts the sort thread.
  * Has to be called at the beginning of the list instance.
  */
-void SynchronizedList::run()
+void SynchronizedList::runAutoSorting()
 {
 	sortThread = std::thread(&SynchronizedList::sort, this);
 }
@@ -43,7 +47,8 @@ void SynchronizedList::sort()
 		}
 
 		sortAlgorithm.sort(front, end);
-		std::cout << "The list has been sorted. \n";
+		printf("The list has been sorted\n");
+		std::this_thread::sleep_for(std::chrono::seconds(SORT_WAIT_FOR_SECS));
 	}
 }
 

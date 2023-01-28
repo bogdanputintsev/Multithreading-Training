@@ -5,7 +5,7 @@
 int main()
 {
 	SynchronizedList list;
-	list.run();
+	list.runAutoSorting();
 
 	InputManager inputManager(&list);
 	std::thread inputThread(&InputManager::input, inputManager);

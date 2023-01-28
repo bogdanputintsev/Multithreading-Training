@@ -16,13 +16,13 @@ public:
 	SynchronizedList& operator=(SynchronizedList&&) = delete;
 
 	~SynchronizedList();
-	void run();
+	void runAutoSorting();
 	void pushBack(const std::string& line);
 	void sort();
 	void exit();
+	std::string toString() const;
 private:
 	friend std::ostream& operator <<(std::ostream& os, const SynchronizedList& synchronizedList);
-	std::string toString() const;
 
 	std::thread sortThread;
 	Data* front = nullptr;
@@ -31,5 +31,7 @@ private:
 	std::mutex writeMutex;
 	std::binary_semaphore sortSemaphore{ 0 };
 	bool isFinished = false;
+
+	static const int SORT_WAIT_FOR_SECS = 5;
 };
 

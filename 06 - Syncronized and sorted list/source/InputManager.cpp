@@ -19,7 +19,7 @@ void InputManager::input() const
 
 		if (line.empty())
 		{
-			std::cout << *synchronizedList << "\n";
+			printf("%s\n", synchronizedList->toString().c_str());
 			continue;
 		}
 
