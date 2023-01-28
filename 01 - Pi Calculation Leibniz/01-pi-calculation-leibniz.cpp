@@ -1,15 +1,13 @@
 #include <cstdlib>
 #include <future>
-#include <thread>
-#include <mutex>
 #include <vector>
 #include <cassert>
 #include <ctime>
 
 namespace
 {
-	const int NUM_STEPS = 999999999;
-	const int NUM_THREADS = 11;
+	constexpr int NUM_STEPS = 999999999;
+	constexpr int NUM_THREADS = 11;
 
 	double calculateLeibnizPi(const int start, const int end)
 	{
@@ -29,7 +27,7 @@ namespace
 }
 
 
-int main(int argc, char** argv)
+int main()
 {
 	const clock_t beginTime = clock();
 
@@ -44,16 +42,16 @@ int main(int argc, char** argv)
 		futureContainer.push_back(std::move(f));
 	}
 
-	for (int i = 0; i < futureContainer.size(); i++)
+	for (auto& i : futureContainer)
 	{
-		pi += futureContainer[i].get();
+		pi += i.get();
 	}
 
 	pi *= 4.0;
 	printf("PI calculation done - %.15g \n", pi);
 
-	float timeElapsed = (float)(clock() - beginTime) / CLOCKS_PER_SEC;
-	printf("Execution time: %.3g\n", timeElapsed);
+	const double timeElapsed{ static_cast<double>(clock() - beginTime) / CLOCKS_PER_SEC };
+	printf("Execution time: %.3f\n", timeElapsed);
 
 	return EXIT_SUCCESS;
 }
