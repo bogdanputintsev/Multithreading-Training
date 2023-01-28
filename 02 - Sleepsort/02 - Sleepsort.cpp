@@ -6,22 +6,21 @@
 
 namespace input
 {
-    const int LINE_COUNT = 7;
-    const int MAX_STRING_LENGTH = 15;
+    constexpr int LINE_COUNT = 7;
+    constexpr int MAX_STRING_LENGTH = 15;
 
     std::string generateRandomString(const int length)
     {
         assert(length > 0);
-        static const char alphanum[] =
-            "0123456789"
-            "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        static constexpr char ALPHANUM[] =
+            "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
         std::string result;
         result.reserve(length);
 
         for (int i = 0; i < length; i++)
         {
-            result += alphanum[rand() % (sizeof(alphanum) - 1)];
+            result += ALPHANUM[rand() % (sizeof(ALPHANUM) - 1)];
         }
 
         return result;
@@ -34,7 +33,7 @@ namespace input
 
         for (int i = 0; i < LINE_COUNT; i++)
         {
-            int stringLength = rand() % MAX_STRING_LENGTH + 1;
+	        const int stringLength = rand() % MAX_STRING_LENGTH + 1;
             input.push_back(generateRandomString(stringLength));
         }
 
@@ -46,9 +45,9 @@ namespace sleepsort
 {
     void sleepPrint(const std::string& line)
     {
-        assert(line != "");
-        
-        size_t length = line.size();
+        assert(!line.empty());
+
+        const size_t length = line.size();
         assert(length > 0);
 
         std::this_thread::sleep_for(std::chrono::seconds(length));
@@ -67,7 +66,7 @@ namespace sleepsort
 
     void run(const std::vector<std::string>& lines)
     {
-        assert(lines.size() > 0);
+        assert(!lines.empty());
         printLinesBeforeSorting(lines);
 
         printf("Sorted result:\n");
@@ -76,7 +75,7 @@ namespace sleepsort
 
         for (const std::string& line : lines)
         {
-            threads.emplace_back(std::thread(sleepsort::sleepPrint, std::ref(line)));
+            threads.emplace_back(sleepsort::sleepPrint, std::ref(line));
         }
 
         for (std::thread& th : threads)
@@ -93,7 +92,7 @@ int main()
 {
     srand(static_cast<unsigned>(time(nullptr)));
 
-    std::vector<std::string> lines = input::generateInput();
+    const std::vector<std::string> lines = input::generateInput();
     sleepsort::run(lines);
 
 	return EXIT_SUCCESS;
