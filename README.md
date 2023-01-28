@@ -23,3 +23,6 @@ Write a program that creates a thread. Use the default attributes. The parent an
 
 ## 06 - Syncronized and sorted list
 The parent thread of the program must read the user-entered strings and place them at the beginning of the linked list. When an empty string is entered, the program should output the current state of the list. The child thread wakes up every five seconds and sorts the list in lexicographical order (use bubble sorting). All operations on the list must be synchronized using mutex.
+
+## 07 - Counting semaphore
+Develop a simulation of a production line that makes screws (widget). A screw is assembled from part C and a module, which in turn consists of parts A and B. It takes 1 second to make part A, two seconds for part B, and three seconds for part C. Simulate the delay in making the parts with sleep. Use semaphore counters.
