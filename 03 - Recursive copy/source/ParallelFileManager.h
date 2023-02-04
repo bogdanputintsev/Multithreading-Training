@@ -12,7 +12,7 @@ public:
 	ParallelFileManager& operator=(const ParallelFileManager&) = default;
 	ParallelFileManager& operator=(ParallelFileManager&&) noexcept = default;
 protected:
-	virtual void copyAllPaths(const fs::path& sourceDir, const fs::path& targetDir) override;
+	virtual void copyAllPaths(const fs::path& sourceDirectory, const fs::path& targetDirectory) override;
 private:
 	std::vector<std::future<void>> futureThreads;
 };

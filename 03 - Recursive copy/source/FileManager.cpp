@@ -4,20 +4,26 @@
 #include <fstream>
 #include <iostream>
 
-void FileManager::run(const fs::path& sourceDir, const fs::path& targetDir)
+/*
+ * This method is used to calculate number of files to copy and to copy them.
+ */
+void FileManager::run(const fs::path& sourceDirectory, const fs::path& targetDirectory)
 {
 	std::cout << "Calculating number of items to copy...\n";
-	collectAllPathsToCopy(sourceDir);
+	collectAllPathsToCopy(sourceDirectory);
 
 	std::cout << "There are " << pathsToCopy.size() << " items to copy.\n";
-	copyAllPaths(sourceDir, targetDir);
+	copyAllPaths(sourceDirectory, targetDirectory);
 }
 
-void FileManager::collectAllPathsToCopy(const fs::path& sourceDir)
+/*
+ * This method indexes all files to copy in the source directory.
+ */
+void FileManager::collectAllPathsToCopy(const fs::path& sourceDirectory)
 {
 	try
 	{
-		for (const auto& item : fs::recursive_directory_iterator(sourceDir))
+		for (const auto& item : fs::recursive_directory_iterator(sourceDirectory))
 		{
 			pathsToCopy.emplace_back(item.path());
 		}
@@ -29,22 +35,34 @@ void FileManager::collectAllPathsToCopy(const fs::path& sourceDir)
 	}
 }
 
-void FileManager::copyAllPaths(const fs::path& sourceDir, const fs::path& targetDir)
+void FileManager::copyAllPaths(const fs::path& sourceDirectory, const fs::path& targetDirectory)
 {
 	for (const auto& path : pathsToCopy)
 	{
 		const fs::path copyFrom = path;
-		const fs::path copyTo = getTargetPathFromSourcePath(sourceDir, targetDir, path);
+		const fs::path copyTo = getTargetPathFromSourcePath(sourceDirectory, targetDirectory, path);
 
 		copyFile(copyFrom, copyTo);
 	}
 }
 
-fs::path FileManager::getTargetPathFromSourcePath(const fs::path& sourceDir, const fs::path& targetDir, const fs::path& absolutePath)
+/*
+ * Concatenates the target directory with the relative path of the source directory.
+ */
+fs::path FileManager::getTargetPathFromSourcePath(const fs::path& sourceDirectory, const fs::path& targetDirectory, const fs::path& absolutePath)
 {
-	return targetDir / getRelativePath(absolutePath.string(), sourceDir.string());
+	return targetDirectory / getRelativePath(absolutePath.string(), sourceDirectory.string());
 }
 
+/*
+ * Removes the source directory from the absolute path.
+ * Example:
+ *		Input: absolutePath = "C:\Users\user\Desktop\source\file.txt"
+ *		Output: "file.txt"
+ * @param absolutePath - absolute path to the file
+ * @param pathToRemove - path to remove from the absolute path
+ * @return relative path to the file
+ */
 std::string FileManager::getRelativePath(const std::string& absolutePath, const std::string& pathToRemove)
 {
 	assert(!pathToRemove.empty());
@@ -52,12 +70,15 @@ std::string FileManager::getRelativePath(const std::string& absolutePath, const 
 	return absolutePath.substr(length);
 }
 
+/*
+ * Getter for pathsToCopy.
+ */
 std::vector<fs::path> FileManager::getAllPathsToCopy() const
 {
 	return pathsToCopy;
 }
 
-void FileManager::copyFile(const fs::path& item, const fs::path& targetDir)
+void FileManager::copyFile(const fs::path& item, const fs::path& targetDirectory)
 {
 	try
 	{
@@ -67,8 +88,8 @@ void FileManager::copyFile(const fs::path& item, const fs::path& targetDir)
 			return;
 		}
 
-		fs::create_directories(targetDir.parent_path());
-		fs::copy_file(item, targetDir);
+		fs::create_directories(targetDirectory.parent_path());
+		fs::copy_file(item, targetDirectory);
 	}
 	catch (fs::filesystem_error& e)
 	{
@@ -76,12 +97,22 @@ void FileManager::copyFile(const fs::path& item, const fs::path& targetDir)
 	}
 }
 
+/*
+ * This method will create a pseudo-random tree of folders and files.
+ * @param path - path to the root of the tree
+ */
 void FileManager::generateTree(const fs::path& path)
 {
 	std::cout << "Spawning recursive tree at " << path.string() << '\n';
 	spawn(path, 0);
 }
 
+/*
+ * Recursive function that creates pseudo-random tree of folders and files.
+ * This method is called from generateTree().
+ * @param currentPath - path to the current folder
+ * @param depth - current depth of the tree
+ */
 void FileManager::spawn(const fs::path& currentPath, const int depth)
 {
 	if (depth > MAX_DEPTH)
@@ -105,6 +136,9 @@ void FileManager::spawn(const fs::path& currentPath, const int depth)
 	}
 }
 
+/*
+ * Generates a pseudo-random name for a folder or a file.
+ */
 std::string FileManager::getRandomName(const int length)
 {
 	assert(length > 0);
@@ -158,13 +192,13 @@ int FileManager::randomIntInRange(const int from, const int to)
 	return rand() % to + from;  // NOLINT(concurrency-mt-unsafe)
 }
 
-void FileManager::removeDir(const fs::path& sourceDir)
+void FileManager::removeDirectory(const fs::path& sourceDirectory)
 {
-	std::cout << "Clearing directory: " << sourceDir.string() << '\n';
+	std::cout << "Clearing directory: " << sourceDirectory.string() << '\n';
 
 	try
 	{
-		for (auto& item : fs::directory_iterator(sourceDir))
+		for (auto& item : fs::directory_iterator(sourceDirectory))
 		{
 			std::cout << '\t' << item.path().string() << '\n';
 			fs::remove_all(item);
@@ -177,23 +211,29 @@ void FileManager::removeDir(const fs::path& sourceDir)
 	}
 }
 
-bool FileManager::compareTrees(const fs::path& sourceDir, const fs::path& targetDir)
+/*
+ * This method compares two directories and checks if they are the identical.
+ * @param sourceDirectory - path to the source directory
+ * @param targetDirectory - path to the target directory
+ * @return true if directories are identical, false otherwise
+ */
+bool FileManager::compareTrees(const fs::path& sourceDirectory, const fs::path& targetDirectory)
 {
 	std::vector<std::string> source;
 
-	for (const auto& item : fs::recursive_directory_iterator(sourceDir))
+	for (const auto& item : fs::recursive_directory_iterator(sourceDirectory))
 	{
 		const std::string actualPathAbsolute = item.path().string();
-		const std::string relativePath = getRelativePath(actualPathAbsolute, sourceDir.string());
+		const std::string relativePath = getRelativePath(actualPathAbsolute, sourceDirectory.string());
 		source.emplace_back(relativePath);
 	}
 
 	std::vector<std::string> target;
 
-	for (const auto& item : fs::recursive_directory_iterator(targetDir))
+	for (const auto& item : fs::recursive_directory_iterator(targetDirectory))
 	{
 		const std::string actualPathAbsolute = item.path().string();
-		const std::string relativePath = getRelativePath(actualPathAbsolute, targetDir.string());
+		const std::string relativePath = getRelativePath(actualPathAbsolute, targetDirectory.string());
 		target.emplace_back(relativePath);
 	}
 

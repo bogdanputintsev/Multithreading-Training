@@ -15,22 +15,22 @@ public:
 	FileManager& operator=(const FileManager&) = default;
 	FileManager& operator=(FileManager&&) noexcept = default;
 
-	void run(const fs::path& sourceDir, const fs::path& targetDir);
+	void run(const fs::path& sourceDirectory, const fs::path& targetDirectory);
 	
 	static void generateTree(const fs::path& path);
-	static bool compareTrees(const fs::path& sourceDir, const fs::path& targetDir);
-	static void removeDir(const fs::path& sourceDir);
+	static bool compareTrees(const fs::path& sourceDirectory, const fs::path& targetDirectory);
+	static void removeDirectory(const fs::path& sourceDirectory);
 protected:
-	void collectAllPathsToCopy(const fs::path& sourceDir);
-	virtual void copyAllPaths(const fs::path& sourceDir, const fs::path& targetDir);
-	static void copyFile(const fs::path& item, const fs::path& targetDir);
+	void collectAllPathsToCopy(const fs::path& sourceDirectory);
+	virtual void copyAllPaths(const fs::path& sourceDirectory, const fs::path& targetDirectory);
+	static void copyFile(const fs::path& item, const fs::path& targetDirectory);
 	static void spawn(const fs::path& currentPath, const int depth = 0);
 	static std::string getRandomName(const int length);
 	static void createFolder(const fs::path& folderPath, const std::string& newFolderName);
 	static void createFile(const fs::path& folderPath, const std::string& newFileName);
 	static int randomIntInRange(const int from, const int to);
 	
-	static fs::path getTargetPathFromSourcePath(const fs::path& sourceDir, const fs::path& targetDir, const fs::path& path);
+	static fs::path getTargetPathFromSourcePath(const fs::path& sourceDirectory, const fs::path& targetDirectory, const fs::path& path);
 	static std::string getRelativePath(const std::string& absolutePath, const std::string& pathToRemove);
 
 	[[nodiscard]] std::vector<fs::path> getAllPathsToCopy() const;

@@ -4,26 +4,26 @@
 
 namespace
 {
-	const std::string SOURCE_DIR = R"(.\assets\FolderFrom\)";
-	const std::string TARGET_DIR = R"(.\assets\FolderTo\)";
+	const std::string SOURCE_DIRECTORY = R"(.\assets\FolderFrom\)";
+	const std::string TARGET_DIRECTORY = R"(.\assets\FolderTo\)";
 }
 
 int main()
 {
 	srand(static_cast<unsigned>(time(nullptr)));  // NOLINT(cert-msc51-cpp)
 
-	FileManager::removeDir(SOURCE_DIR);
-	FileManager::removeDir(TARGET_DIR);
-	FileManager::generateTree(SOURCE_DIR);
+	FileManager::removeDirectory(SOURCE_DIRECTORY);
+	FileManager::removeDirectory(TARGET_DIRECTORY);
+	FileManager::generateTree(SOURCE_DIRECTORY);
 
 	const auto start = std::chrono::high_resolution_clock::now();
 
 	auto fileManager = ParallelFileManager();
-	fileManager.run(SOURCE_DIR, TARGET_DIR);
+	fileManager.run(SOURCE_DIRECTORY, TARGET_DIRECTORY);
 
 	const auto end = std::chrono::high_resolution_clock::now();
 
-	if (FileManager::compareTrees(SOURCE_DIR, TARGET_DIR))
+	if (FileManager::compareTrees(SOURCE_DIRECTORY, TARGET_DIRECTORY))
 	{
 		std::cout << "Copy test passed.\n";
 	}
