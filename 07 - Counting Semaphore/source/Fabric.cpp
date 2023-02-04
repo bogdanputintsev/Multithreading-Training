@@ -7,7 +7,7 @@ void Fabric::run()
 	
 	for (int i = 0; i < NUM_OF_WORKERS; ++i)
 	{
-		detailWorkers.emplace_back(std::make_shared<DetailWorker>(i + 1, &consumerCv));
+		//detailWorkers.emplace_back(std::make_shared<DetailWorker>(i + 1, &semaphores[i]));
 		detailWorkerThreads.emplace_back(&DetailWorker::produceDetail, detailWorkers.back());
 	}
 	
@@ -24,14 +24,10 @@ void Fabric::detailConsumer()
 	while (programHasToRun())
 	{
 		printf("[DetailConsumer] Waiting for details...\n");
-
-		std::unique_lock lock{ consumerMutex };
-		consumerCv.wait(lock, [this] {return std::ranges::all_of(detailWorkers, 
-			[&](const auto& detailWorker)
-			{
-				return !detailWorker->isQueueEmpty();
-			});
-		});
+		for (auto& semaphore : semaphores)
+		{
+			semaphore.acquire();
+		}
 
 		for (const auto& detailWorker : detailWorkers)
 		{

@@ -25,16 +25,17 @@ private:
 			std::unique_lock<std::mutex> lock{ printMutex };
 			sleepCondition.wait(lock, [=]() { return threadType != lastActiveThread; });
 
-			printLine(i);
+			printLine(i, threadType);
 
 			lastActiveThread = threadType;
 			sleepCondition.notify_all();
 		}
 	}
 
-	static void printLine(const int idx)
+	static void printLine(const int idx, const ThreadType threadType)
 	{
-		printf("[%d]\n", idx);
+		const std::string threadName = threadType == ThreadType::PARENT ? "[PARENT]" : "[CHILD] ";
+		printf("%s %d\n", threadName.c_str(), idx);
 		std::this_thread::sleep_for(SLEEP_DURATION_MS);
 	}
 	

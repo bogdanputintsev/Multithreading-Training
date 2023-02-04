@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33110.190
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "05 - Syncronized output", "05 - Syncronized output.vcxproj", "{5D00CCAA-5939-48A3-8472-BA56678D57D9}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "05 - Synchronized output", "05 - Synchronized output.vcxproj", "{5D00CCAA-5939-48A3-8472-BA56678D57D9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

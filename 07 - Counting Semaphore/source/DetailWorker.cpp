@@ -2,10 +2,10 @@
 
 #include <cassert>
 
-DetailWorker::DetailWorker(const int _workTimeInSeconds, std::condition_variable *_cv)
+DetailWorker::DetailWorker(const int _workTimeInSeconds, std::counting_semaphore<10> *_semaphore)
 	:
 	workTimeInSeconds(_workTimeInSeconds),
-	notifyCv(_cv)
+	semaphore(_semaphore)
 {
 	assert(_workTimeInSeconds > 0);
 }
@@ -20,7 +20,8 @@ void DetailWorker::produceDetail()
 		Detail detail;
 		detailQueue.push(detail);
 		printf("[DetailWorker %d] Detail produced. The queue length now is: %zu\n", workTimeInSeconds, detailQueue.size());
-		notifyCv->notify_all();
+		//notifyCv->notify_all();
+		semaphore->release();
 	}
 
 	active = false;
