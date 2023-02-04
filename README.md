@@ -1,6 +1,6 @@
 # Multithreading Training
 
-This project aims to learn in detail about multithreaded programming with my mentor.
+This project's aim is to learn in detail about multithreaded programming. The tasks are given and reviewed by my mentor.
 
 ## 01 - Pi Calculation Leibniz
 Write a program that calculates pi using Leibniz's series. The number of threads of the program must be determined by the command line parameter. The number of iterations can be determined at compile time. 
