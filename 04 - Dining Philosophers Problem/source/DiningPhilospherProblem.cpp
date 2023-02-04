@@ -1,5 +1,8 @@
 #include "DiningPhilospherProblem.h"
 
+/*
+ * Method initializes the philosophers threads and starts the dinner.
+ */
 void PhilosophersTable::startDinner()
 {
 	for (int i = 0; i < NUM_PHILOSOPHERS; i++)
@@ -13,6 +16,12 @@ void PhilosophersTable::startDinner()
 	}
 }
 
+/*
+ * Method simulates the philosopher's job.
+ * @param leftFork - the left fork of the philosopher.
+ * @param rightFork - the right fork of the philosopher.
+ * @param philosopherNum - the number of the philosopher.
+ */
 void PhilosophersTable::philosopherJob(std::mutex& leftFork, std::mutex& rightFork, const int philosopherNum)
 {
 	printf("[Philosopher %d]: sitting down to dinner.\n", philosopherNum + 1);
@@ -43,6 +52,9 @@ void PhilosophersTable::philosopherJob(std::mutex& leftFork, std::mutex& rightFo
 	printf("[Philosopher %d]: is done eating.\n", philosopherNum + 1);
 }
 
+/*
+ * Decrements the food left and returns the new value.
+ */
 int PhilosophersTable::takeFood()
 {
 	std::lock_guard<std::mutex> foodLock(food);
@@ -50,12 +62,18 @@ int PhilosophersTable::takeFood()
 	return foodLeft;
 }
 
+/*
+ * Locks the fork.
+ */
 void PhilosophersTable::takeFork(std::mutex& fork, const int philosopherNum, const std::string& hand)
 {
 	fork.lock();
 	printf("[Philosopher %d]: got %s fork\n", philosopherNum + 1, hand.c_str());
 }
 
+/*
+ * Unlocks the fork.
+ */
 void PhilosophersTable::releaseFork(std::mutex& fork)
 {
 	fork.unlock();

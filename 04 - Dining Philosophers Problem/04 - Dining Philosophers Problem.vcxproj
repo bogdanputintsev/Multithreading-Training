@@ -139,7 +139,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="04 - Dining Philosophers Problem.cpp" />
+    <ClCompile Include="main.cpp" />
     <ClCompile Include="source\DiningPhilospherProblem.cpp" />
   </ItemGroup>
   <ItemGroup>
