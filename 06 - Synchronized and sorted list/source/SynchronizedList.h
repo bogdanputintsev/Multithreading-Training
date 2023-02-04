@@ -32,6 +32,6 @@ private:
 	std::binary_semaphore sortSemaphore{ 0 };
 	bool isFinished = false;
 
-	static const int SORT_WAIT_FOR_SECS = 5;
+	static constexpr int SORT_WAIT_FOR_SECS = 5;
 };
 

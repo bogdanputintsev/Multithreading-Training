@@ -20,7 +20,7 @@ void Data::setNext(Data* data)
 	next = data;
 }
 
-std::string Data::getMessage() const
+const std::string& Data::getMessage() const
 {
 	return message;
 }
@@ -43,17 +43,4 @@ void Data::unlock() const
 bool operator>(const Data& data1, const Data& data2)
 {
 	return data1.getMessage() > data2.getMessage();
-}
-
-void swapData(Data& first, Data& second)
-{
-	first.lock();
-	second.lock();
-
-	const std::string tmp = first.getMessage();
-	first.setMessage(second.getMessage());
-	second.setMessage(tmp);
-
-	first.unlock();
-	second.unlock();
 }

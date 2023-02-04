@@ -13,5 +13,8 @@ public:
 
 	virtual ~BubbleSort() override = default;
 	virtual void sort(Data* front, Data* end) const override;
+private:
+	static void swap(Data* first, Data* second);
+	static void setToTheNextPointer(Data** pointer, const bool unlockPointer);
 };
 
