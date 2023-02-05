@@ -1,12 +1,13 @@
 #pragma once
 
+#include <list>
 #include <sstream>
 #include <thread>
-#include <semaphore>
 
 #include "BubbleSort.h"
+#include "Subject.h"
 
-class SynchronizedList final
+class SynchronizedList final : public Subject
 {
 public:
 	SynchronizedList() = default;
@@ -15,23 +16,23 @@ public:
 	SynchronizedList& operator=(const SynchronizedList&) = delete;
 	SynchronizedList& operator=(SynchronizedList&&) = delete;
 
-	~SynchronizedList();
-	void runAutoSorting();
+	~SynchronizedList() override;
 	void pushBack(const std::string& line);
-	void sort();
-	void exit();
-	std::string toString() const;
+
+	virtual void attach(Observer* observer) override;
+	virtual void detach(Observer* observer) override;
+	virtual void notify() override;
+
+	[[nodiscard]] Data* getFront() const;
+	[[nodiscard]] Data* getEnd() const;
+	[[nodiscard]] std::string toString() const;
 private:
 	friend std::ostream& operator <<(std::ostream& os, const SynchronizedList& synchronizedList);
 
-	std::thread sortThread;
 	Data* front = nullptr;
 	Data* end = nullptr;
 
+	std::list<Observer*> observers;
 	std::mutex writeMutex;
-	std::binary_semaphore sortSemaphore{ 0 };
-	bool isFinished = false;
-
-	static constexpr int SORT_WAIT_FOR_SECS = 5;
 };
 

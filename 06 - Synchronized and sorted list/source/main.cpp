@@ -1,17 +1,25 @@
 #include <iostream>
 #include <thread>
 #include "InputManager.h"
+#include "Sorter.h"
 
 int main()
 {
 	SynchronizedList list;
-	list.runAutoSorting();
 
 	InputManager inputManager(&list);
 	std::thread inputThread(&InputManager::input, inputManager);
+
+	const auto sorter = std::make_unique<Sorter>(&list);
+	list.attach(sorter.get());
+	std::thread sorterThread([&]() {
+		sorter->sortLoop();
+	});
+
 	inputThread.join();
 
-	list.exit();
+	sorter->stop();
+	sorterThread.join();
 
 	return EXIT_SUCCESS;
 }

@@ -27,13 +27,7 @@ void InputManager::input() const
 		{
 			break;
 		}
-
-		if (line == "/sort")
-		{
-			synchronizedList->sort();
-			continue;
-		}
-
+		
 		synchronizedList->pushBack(line);
 	}
 }

@@ -5,6 +5,9 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
+    <Filter Include="Source Files\Interfaces">
+      <UniqueIdentifier>{02b728dc-f5e8-4482-ae0a-3ede114aaa2a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\BubbleSort.cpp">
@@ -19,10 +22,10 @@
     <ClCompile Include="source\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\SortAlgorithm.cpp">
+    <ClCompile Include="source\SynchronizedList.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\SynchronizedList.cpp">
+    <ClCompile Include="source\Sorter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -36,11 +39,20 @@
     <ClInclude Include="source\InputManager.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="source\SortAlgorithm.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="source\SynchronizedList.h">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Sorter.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\SortAlgorithm.h">
+      <Filter>Source Files\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Observer.h">
+      <Filter>Source Files\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Subject.h">
+      <Filter>Source Files\Interfaces</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

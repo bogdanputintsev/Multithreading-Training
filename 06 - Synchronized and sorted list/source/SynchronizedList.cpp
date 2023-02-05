@@ -1,14 +1,10 @@
 #include "SynchronizedList.h"
 
+#include <algorithm>
 #include <iostream>
 
 SynchronizedList::~SynchronizedList()
 {
-	if (sortThread.joinable())
-	{
-		sortThread.join();
-	}
-	
 	const Data* data = front;
 	while (data != nullptr)
 	{
@@ -21,45 +17,6 @@ SynchronizedList::~SynchronizedList()
 
 		data = next;
 	}
-}
-
-/*
- * Method that starts the sort thread.
- * Has to be called at the beginning of the list instance.
- */
-void SynchronizedList::runAutoSorting()
-{
-	sortThread = std::thread(&SynchronizedList::sort, this);
-}
-
-/*
- * This method is called by the sort thread.
- */
-void SynchronizedList::sort()
-{
-	const auto sortAlgorithm = BubbleSort();
-	while (!isFinished)
-	{
-		sortSemaphore.acquire();
-		if (isFinished)
-		{
-			break;
-		}
-
-		sortAlgorithm.sort(front, end);
-		printf("The list has been sorted\n");
-		std::this_thread::sleep_for(std::chrono::seconds(SORT_WAIT_FOR_SECS));
-	}
-}
-
-/*
- * Marks the list as finished and releases the sort semaphore to be finished.
- * This method is called after all the input threads have been finished.
- */
-void SynchronizedList::exit()
-{
-	isFinished = true;
-	sortSemaphore.release();
 }
 
 /*
@@ -79,10 +36,47 @@ void SynchronizedList::pushBack(const std::string& line)
 	end->lock();
 	end->setNext(newData);
 
-	const Data* tmp = end;
+	const Data* dataToUnlock = end;
 	end = newData;
-	tmp->unlock();
-	sortSemaphore.release();
+	dataToUnlock->unlock();
+
+	// Notify all the sorter observers that the list has been modified.
+	notify();
+}
+
+/*
+ * This method will attach a new observer (sorter) to the list.
+ * This observer will be notified when the list is modified.
+ */
+void SynchronizedList::attach(Observer* observer)
+{
+	observers.push_back(observer);
+}
+
+/*
+ * After detaching an observer, it will no longer be notified when the list is modified.
+ */
+void SynchronizedList::detach(Observer* observer)
+{
+	observers.remove(observer);
+}
+
+/*
+ * This method will notify all observers that the list has been modified.
+ */
+void SynchronizedList::notify()
+{
+	std::ranges::for_each(observers, [](Observer* observer) { observer->update(); });
+}
+
+Data* SynchronizedList::getFront() const
+{
+	return front;
+}
+
+Data* SynchronizedList::getEnd() const
+{
+	return end;
 }
 
 std::ostream& operator<<(std::ostream& os, const SynchronizedList& synchronizedList)

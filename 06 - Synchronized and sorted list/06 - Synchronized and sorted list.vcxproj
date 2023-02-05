@@ -23,14 +23,17 @@
     <ClCompile Include="source\Data.cpp" />
     <ClCompile Include="source\InputManager.cpp" />
     <ClCompile Include="source\main.cpp" />
-    <ClCompile Include="source\SortAlgorithm.cpp" />
+    <ClCompile Include="source\Sorter.cpp" />
     <ClCompile Include="source\SynchronizedList.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\BubbleSort.h" />
     <ClInclude Include="source\Data.h" />
     <ClInclude Include="source\InputManager.h" />
+    <ClInclude Include="source\Observer.h" />
     <ClInclude Include="source\SortAlgorithm.h" />
+    <ClInclude Include="source\Sorter.h" />
+    <ClInclude Include="source\Subject.h" />
     <ClInclude Include="source\SynchronizedList.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
