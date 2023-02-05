@@ -24,7 +24,7 @@ private:
 	bool isRunning = true;
 	SynchronizedList* synchronizedList = nullptr;
 
-	std::binary_semaphore sortSemaphore{ 0 };
+	std::binary_semaphore newUnsortedDataExistSemaphore{ 0 };
 
 	static constexpr int SORT_WAIT_FOR_SECS = 5;
 };

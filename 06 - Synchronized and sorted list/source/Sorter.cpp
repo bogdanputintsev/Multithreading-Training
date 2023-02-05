@@ -14,9 +14,13 @@ Sorter::Sorter(SynchronizedList* synchronizedList)
  */
 void Sorter::update()
 {
-	sortSemaphore.release();
+	newUnsortedDataExistSemaphore.release();
 }
 
+/*
+ * This method will be called by the sorter thread.
+ * It will sort the list every SORT_WAIT_FOR_SECS seconds.
+ */
 void Sorter::sortLoop()
 {
 	const auto sortAlgorithm = BubbleSort();
@@ -30,11 +34,15 @@ void Sorter::sortLoop()
 	}
 }
 
+/*
+ * This method will be called by the sorter thread.
+ * It will sort the list using the given sort algorithm.
+ */
 bool Sorter::sort(const SortAlgorithm& sortAlgorithm)
 {
 	assert(synchronizedList != nullptr && "Sorter contains invalid pointer on SynchronizedList. Value is NULL.");
 
-	sortSemaphore.acquire();
+	newUnsortedDataExistSemaphore.acquire();
 	if (!isRunning)
 	{
 		return false;
@@ -52,5 +60,5 @@ bool Sorter::sort(const SortAlgorithm& sortAlgorithm)
 void Sorter::stop()
 {
 	isRunning = false;
-	sortSemaphore.release();
+	newUnsortedDataExistSemaphore.release();
 }
