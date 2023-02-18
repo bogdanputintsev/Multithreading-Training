@@ -1,13 +1,14 @@
-#include "Fabric.h"
+#include "Factory.h"
 
-void Fabric::run()
+void Factory::run()
 {
 	std::vector<std::thread> detailWorkerThreads;
-	std::thread detailConsumerThread(&Fabric::detailConsumer, this);
+	std::thread detailConsumerThread(&Factory::detailConsumer, this);
 	
-	for (int i = 0; i < NUM_OF_WORKERS; ++i)
+	for (int i = 0; i < NUM_OF_WORKERS; i++)
 	{
-		//detailWorkers.emplace_back(std::make_shared<DetailWorker>(i + 1, &semaphores[i]));
+		semaphores[i] = std::make_shared<std::counting_semaphore<>>(0);
+		detailWorkers.emplace_back(std::make_shared<DetailWorker>(i + 1, semaphores[i].get()));
 		detailWorkerThreads.emplace_back(&DetailWorker::produceDetail, detailWorkers.back());
 	}
 	
@@ -19,14 +20,14 @@ void Fabric::run()
 	detailConsumerThread.join();
 }
 
-void Fabric::detailConsumer()
+void Factory::detailConsumer() const
 {
 	while (programHasToRun())
 	{
 		printf("[DetailConsumer] Waiting for details...\n");
 		for (auto& semaphore : semaphores)
 		{
-			semaphore.acquire();
+			semaphore->acquire();
 		}
 
 		for (const auto& detailWorker : detailWorkers)
@@ -38,7 +39,7 @@ void Fabric::detailConsumer()
 	}
 }
 
-bool Fabric::programHasToRun() const
+bool Factory::programHasToRun() const
 {
 	return std::ranges::all_of(detailWorkers, [](const auto& detailWorker)
 		{

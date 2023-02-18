@@ -138,12 +138,12 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="source\DetailWorker.cpp" />
-    <ClCompile Include="source\Fabric.cpp" />
+    <ClCompile Include="source\Factory.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\Detail.h" />
     <ClInclude Include="source\DetailWorker.h" />
-    <ClInclude Include="source\Fabric.h" />
+    <ClInclude Include="source\Factory.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

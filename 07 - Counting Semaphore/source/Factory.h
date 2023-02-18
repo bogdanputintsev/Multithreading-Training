@@ -6,21 +6,17 @@
 
 #include "DetailWorker.h"
 
-class Fabric final
+class Factory final
 {
 public:
-	Fabric() = default;
+	Factory() = default;
 	void run();
 	[[nodiscard]] bool programHasToRun() const;
 private:
-	void detailConsumer();
-
+	void detailConsumer() const;
 	constexpr static int NUM_OF_WORKERS = 3;
-	constexpr static int MAX_NUM_OF_DETAILS_TO_PRODUCE = 10;
-	std::array<std::counting_semaphore<MAX_NUM_OF_DETAILS_TO_PRODUCE>, NUM_OF_WORKERS> semaphores;
 	
-	std::mutex consumerMutex;
-	std::condition_variable consumerCv;
+	std::array<std::shared_ptr<std::counting_semaphore<>>, NUM_OF_WORKERS> semaphores;
 	std::vector<std::shared_ptr<DetailWorker>> detailWorkers;
 };
 

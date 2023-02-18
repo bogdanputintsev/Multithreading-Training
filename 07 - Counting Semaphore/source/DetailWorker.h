@@ -8,21 +8,19 @@
 class DetailWorker final
 {
 public:
-	DetailWorker(const int _workTimeInSeconds, std::counting_semaphore<10>* _semaphore);
+	DetailWorker(const int workTimeInSeconds, std::counting_semaphore<>* semaphore);
 	void produceDetail();
 	void popDetail();
 	[[nodiscard]] bool isActive() const;
 	[[nodiscard]] bool isQueueEmpty();
 private:
-	const int NUM_OF_DETAILS_TO_PRODUCE = 10;
+	constexpr static int NUM_OF_DETAILS_TO_PRODUCE = 10;
 
 	bool active = true;
 	const int workTimeInSeconds;
 
-	std::counting_semaphore<10>* semaphore;
-	//std::condition_variable* notifyCv;
+	std::counting_semaphore<>* semaphore;
 	std::queue<Detail> detailQueue;
 	std::mutex queueMutex;
-	
 };
 

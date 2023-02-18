@@ -2,12 +2,12 @@
 
 #include <cassert>
 
-DetailWorker::DetailWorker(const int _workTimeInSeconds, std::counting_semaphore<10> *_semaphore)
+DetailWorker::DetailWorker(const int workTimeInSeconds, std::counting_semaphore<>* semaphore)
 	:
-	workTimeInSeconds(_workTimeInSeconds),
-	semaphore(_semaphore)
+	workTimeInSeconds(workTimeInSeconds),
+	semaphore(semaphore)
 {
-	assert(_workTimeInSeconds > 0);
+	assert(workTimeInSeconds > 0);
 }
 
 void DetailWorker::produceDetail()
@@ -20,7 +20,6 @@ void DetailWorker::produceDetail()
 		Detail detail;
 		detailQueue.push(detail);
 		printf("[DetailWorker %d] Detail produced. The queue length now is: %zu\n", workTimeInSeconds, detailQueue.size());
-		//notifyCv->notify_all();
 		semaphore->release();
 	}
 
@@ -31,6 +30,11 @@ void DetailWorker::produceDetail()
 void DetailWorker::popDetail()
 {
 	std::lock_guard lockGuard(queueMutex);
+	if (detailQueue.empty())
+	{
+		return;
+	}
+	
 	detailQueue.pop();
 }
 

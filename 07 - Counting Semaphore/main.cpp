@@ -1,10 +1,10 @@
 #include <iostream>
-#include "source/Fabric.h"
+#include "source/Factory.h"
 
 int main()
 {
-	auto fabric = Fabric();
-	fabric.run();
+	auto factory = Factory();
+	factory.run();
 	
 	return EXIT_SUCCESS;
 }
