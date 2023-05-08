@@ -1,6 +1,6 @@
 #pragma once
 
-class Detail
+class DetailC final
 {
 	// empty
 };

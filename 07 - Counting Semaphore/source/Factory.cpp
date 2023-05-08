@@ -1,5 +1,12 @@
 #include "Factory.h"
 
+#include <cassert>
+
+#include "Module.h"
+#include "Widget.h"
+
+void DetailWorker<DetailA>::produceDetail();
+
 void Factory::run()
 {
 	std::vector<std::thread> detailWorkerThreads;
@@ -8,9 +15,19 @@ void Factory::run()
 	for (int i = 0; i < NUM_OF_WORKERS; i++)
 	{
 		semaphores[i] = std::make_shared<std::counting_semaphore<>>(0);
-		detailWorkers.emplace_back(std::make_shared<DetailWorker>(i + 1, semaphores[i].get()));
-		detailWorkerThreads.emplace_back(&DetailWorker::produceDetail, detailWorkers.back());
 	}
+	
+	assert(semaphores.size() == NUM_OF_WORKERS);
+
+	workerA = std::make_shared<DetailWorker<DetailA>>("Worker A", 1, semaphores[0].get());
+	detailWorkerThreads.emplace_back(&DetailWorker<DetailA>::produceDetail, workerA.get());
+	
+	workerB = std::make_shared<DetailWorker<DetailB>>("Worker B", 2, semaphores[1].get());
+	detailWorkerThreads.emplace_back(&DetailWorker<DetailB>::produceDetail, workerB.get());
+
+	workerC = std::make_shared<DetailWorker<DetailC>>("Worker C", 3, semaphores[2].get());
+	detailWorkerThreads.emplace_back(&DetailWorker<DetailC>::produceDetail, workerC.get());
+
 	
 	for (auto& detailWorkerThread : detailWorkerThreads)
 	{
@@ -30,10 +47,19 @@ void Factory::detailConsumer() const
 			semaphore->acquire();
 		}
 
-		for (const auto& detailWorker : detailWorkers)
+		auto detailA = workerA->popDetail();
+		auto detailB = workerB->popDetail();
+		auto detailC = workerC->popDetail();
+		if (!detailA.has_value() || !detailB.has_value() || !detailC.has_value())
 		{
-			detailWorker->popDetail();
+			throw std::runtime_error("Semaphore was acquired, but detail is missing.");
 		}
+
+		Module module(detailA.value(), detailB.value());
+		printf("[DetailConsumer] Module from details A and B has been created.\n");
+
+		[[maybe_unused]] Widget widget(module, detailC.value());
+		printf("[DetailConsumer] Widget is ready.\n");
 
 		printf("[DetailConsumer] Detail consumed.\n");
 	}
@@ -41,8 +67,5 @@ void Factory::detailConsumer() const
 
 bool Factory::programHasToRun() const
 {
-	return std::ranges::all_of(detailWorkers, [](const auto& detailWorker)
-		{
-			return detailWorker->isActive();
-		});
+	return workerA->isActive() && workerB->isActive() && workerC->isActive();
 }

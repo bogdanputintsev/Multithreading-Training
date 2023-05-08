@@ -78,6 +78,7 @@
       <ConformanceMode>true</ConformanceMode>
       <TreatWarningAsError>true</TreatWarningAsError>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -94,6 +95,7 @@
       <ConformanceMode>true</ConformanceMode>
       <TreatWarningAsError>true</TreatWarningAsError>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -127,6 +129,7 @@
       <ConformanceMode>true</ConformanceMode>
       <TreatWarningAsError>true</TreatWarningAsError>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -139,11 +142,17 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="source\DetailWorker.cpp" />
     <ClCompile Include="source\Factory.cpp" />
+    <ClCompile Include="source\Module.cpp" />
+    <ClCompile Include="source\Widget.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="source\Detail.h" />
+    <ClInclude Include="source\DetailA.h" />
+    <ClInclude Include="source\DetailB.h" />
+    <ClInclude Include="source\DetailC.h" />
     <ClInclude Include="source\DetailWorker.h" />
     <ClInclude Include="source\Factory.h" />
+    <ClInclude Include="source\Module.h" />
+    <ClInclude Include="source\Widget.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
