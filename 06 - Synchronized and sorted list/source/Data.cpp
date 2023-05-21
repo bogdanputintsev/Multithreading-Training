@@ -2,8 +2,7 @@
 
 Data::Data(std::string message)
 	:
-	message(std::move(message)),
-	dataMutex(new std::mutex)
+	message(std::move(message))
 {
 }
 
@@ -30,14 +29,19 @@ void Data::setMessage(const std::string& newMessage)
 	message = newMessage;
 }
 
-void Data::lock() const
+std::unique_lock<std::mutex> Data::getUniqueLock()
 {
-	dataMutex->lock();
+	return std::unique_lock(dataMutex);
 }
 
-void Data::unlock() const
+void Data::lock()
 {
-	dataMutex->unlock();
+	dataMutex.lock();
+}
+
+void Data::unlock()
+{
+	dataMutex.unlock();
 }
 
 bool operator>(const Data& data1, const Data& data2)

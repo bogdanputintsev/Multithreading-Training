@@ -1,11 +1,19 @@
 #include "SynchronizedList.h"
 
 #include <algorithm>
+#include <cassert>
 #include <iostream>
+
+SynchronizedList::SynchronizedList()
+	:
+	sentinel(std::make_shared<Data>("Sentinel"))
+{
+}
 
 SynchronizedList::~SynchronizedList()
 {
-	const Data* data = front;
+	std::unique_lock sentinelLock(sentinel->getUniqueLock());
+	const Data* data = sentinel->getNext();
 	while (data != nullptr)
 	{
 		const Data* next = data->getNext();
@@ -24,21 +32,22 @@ SynchronizedList::~SynchronizedList()
  */
 void SynchronizedList::pushBack(const std::string& line)
 {
-	std::lock_guard lock(writeMutex);
-	if (front == nullptr)
 	{
-		front = new Data(line);
-		end = front;
-		return;
+		const auto newData = new Data(line);
+		std::unique_lock sentinelLock(sentinel->getUniqueLock());
+
+		if (sentinel->getNext())
+		{
+			std::unique_lock frontLock(sentinel->getNext()->getUniqueLock());
+			const auto dataToAssignNext = sentinel->getNext();
+			sentinel->setNext(newData);
+			newData->setNext(dataToAssignNext);
+		}
+		else
+		{
+			sentinel->setNext(newData);
+		}
 	}
-
-	const auto newData = new Data(line);
-	end->lock();
-	end->setNext(newData);
-
-	const Data* dataToUnlock = end;
-	end = newData;
-	dataToUnlock->unlock();
 
 	// Notify all the sorter observers that the list has been modified.
 	notify();
@@ -50,6 +59,7 @@ void SynchronizedList::pushBack(const std::string& line)
  */
 void SynchronizedList::attach(Observer* observer)
 {
+	std::lock_guard lock(observersMutex);
 	observers.push_back(observer);
 }
 
@@ -58,6 +68,7 @@ void SynchronizedList::attach(Observer* observer)
  */
 void SynchronizedList::detach(Observer* observer)
 {
+	std::lock_guard lock(observersMutex);
 	observers.remove(observer);
 }
 
@@ -66,17 +77,16 @@ void SynchronizedList::detach(Observer* observer)
  */
 void SynchronizedList::notify()
 {
+	std::lock_guard lock(observersMutex);
 	std::ranges::for_each(observers, [](Observer* observer) { observer->update(); });
 }
 
 Data* SynchronizedList::getFront() const
 {
-	return front;
-}
-
-Data* SynchronizedList::getEnd() const
-{
-	return end;
+	std::unique_lock sentinelLock(sentinel->getUniqueLock());
+	std::unique_lock frontLock(sentinel->getNext()->getUniqueLock());
+	Data* returnData = sentinel->getNext();
+	return returnData;
 }
 
 std::ostream& operator<<(std::ostream& os, const SynchronizedList& synchronizedList)
@@ -90,26 +100,56 @@ std::ostream& operator<<(std::ostream& os, const SynchronizedList& synchronizedL
  */
 std::string SynchronizedList::toString() const
 {
-	std::string result = "\"synchronizedList\": [\n";
+	sentinel->lock();
 
-	const Data* data = front;
-	while (data != nullptr)
+	// Empty list
+	if (sentinel->getNext() == nullptr)
 	{
-		data->lock();
-		const Data* tmp = data;
+		sentinel->unlock();
+		return "\"synchronizedList\": []";
+	}
 
-		result += "\t\"" + (data->getMessage()) + "\",\n";
-		if (data->getNext() == nullptr)
+	sentinel->getNext()->lock(); // lock current (front) point
+
+	const Data* current = sentinel->getNext();
+
+	// Only one message
+	if (current->getNext() == nullptr)
+	{
+		const std::string frontMessage = current->getMessage();
+		sentinel->getNext()->unlock();
+		sentinel->unlock();
+		return "\"synchronizedList\": [\n\t\"" + frontMessage + "\"\n]\n";
+	}
+
+	// At least two messages
+	current->getNext()->lock();	// lock next point
+	Data* previous = sentinel.get();
+	const Data* next = current->getNext();
+
+	std::string result = "\"synchronizedList\": [";
+
+	while (current != nullptr)
+	{
+		result += "\n\t\""
+			+ (current->getMessage()) + "\""
+			+ (next->getNext() ? "," : "");
+
+		if(next->getNext() != nullptr)
 		{
-			tmp->unlock();
-			break;
+			next->getNext()->lock();
+			next = next->getNext();
 		}
 
-		data = data->getNext();
-		tmp->unlock();
+		current = current->getNext();
+		Data* dataToUnlock = previous;
+		previous = previous->getNext();
+		dataToUnlock->unlock();
 	}
-	
-	result += "]\n";
+
+	previous->unlock();
+
+	result += "\n]\n";
 
 	return result;
 }

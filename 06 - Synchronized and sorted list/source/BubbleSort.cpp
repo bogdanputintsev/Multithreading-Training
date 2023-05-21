@@ -1,11 +1,11 @@
 #include "BubbleSort.h"
 
-#include <cassert>
-
-void BubbleSort::sort(Data* front, /* unused */ Data* end) const
+void BubbleSort::sort(Data* front) const
 {
-	assert(front != nullptr && "The `front` pointer is NULL in BubbleSort::sort");
-	assert(end != nullptr && "The `end` pointer is NULL in BubbleSort::sort");
+	if (front == nullptr)
+	{
+		return;
+	}
 
 	front->lock();
 	Data* firstPointer = front;
@@ -69,7 +69,7 @@ void BubbleSort::setToTheNextPointer(Data** pointer, const bool unlockPointer)
 		return;
 	}
 
-	const Data* pointerToUnlock = *pointer;
+	Data* pointerToUnlock = *pointer;
 	(*pointer) = (*pointer)->getNext();
 	pointerToUnlock->unlock();
 }
