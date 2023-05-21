@@ -48,7 +48,7 @@ bool Sorter::sort(const SortAlgorithm& sortAlgorithm)
 		return false;
 	}
 
-	sortAlgorithm.sort(synchronizedList->getFront(), synchronizedList->getEnd());
+	sortAlgorithm.sort(synchronizedList->getFront());
 	printf("The synchronizedList has been sorted\n");
 	return true;
 }

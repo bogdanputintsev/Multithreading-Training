@@ -10,7 +10,7 @@
 class SynchronizedList final : public Subject
 {
 public:
-	SynchronizedList() = default;
+	SynchronizedList();
 	SynchronizedList(const SynchronizedList&) = delete;
 	SynchronizedList(SynchronizedList&&) = delete;
 	SynchronizedList& operator=(const SynchronizedList&) = delete;
@@ -24,15 +24,13 @@ public:
 	virtual void notify() override;
 
 	[[nodiscard]] Data* getFront() const;
-	[[nodiscard]] Data* getEnd() const;
 	[[nodiscard]] std::string toString() const;
 private:
 	friend std::ostream& operator <<(std::ostream& os, const SynchronizedList& synchronizedList);
 
-	Data* front = nullptr;
-	Data* end = nullptr;
-
+	std::shared_ptr<Data> sentinel;
 	std::list<Observer*> observers;
-	std::mutex writeMutex;
+
+	std::mutex observersMutex;
 };
 

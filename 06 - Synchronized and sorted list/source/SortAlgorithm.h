@@ -12,6 +12,7 @@ public:
 	SortAlgorithm(SortAlgorithm&&) = delete;
 	virtual ~SortAlgorithm() = default;
 
-	virtual void sort(Data* front, Data * end) const = 0;
+	virtual void sort(Data* front) const = 0;
+
 };
 
