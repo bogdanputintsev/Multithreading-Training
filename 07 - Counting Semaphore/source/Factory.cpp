@@ -2,33 +2,27 @@
 
 #include <cassert>
 
-#include "Module.h"
-#include "Widget.h"
-
-void DetailWorker<DetailA>::produceDetail();
-
 void Factory::run()
 {
 	std::vector<std::thread> detailWorkerThreads;
-	std::thread detailConsumerThread(&Factory::detailConsumer, this);
+	std::thread detailConsumerThread { &Factory::detailConsumer, this };
 	
-	for (int i = 0; i < NUM_OF_WORKERS; i++)
+	for (int i = 0; i < NUMBER_OF_WORKERS; i++)
 	{
 		semaphores[i] = std::make_shared<std::counting_semaphore<>>(0);
 	}
 	
-	assert(semaphores.size() == NUM_OF_WORKERS);
+	assert(semaphores.size() == NUMBER_OF_WORKERS);
 
-	workerA = std::make_shared<DetailWorker<DetailA>>("Worker A", 1, semaphores[0].get());
-	detailWorkerThreads.emplace_back(&DetailWorker<DetailA>::produceDetail, workerA.get());
+	workerA = std::make_shared<DetailWorker>("Worker A", 1, semaphores[0]);
+	detailWorkerThreads.emplace_back(&DetailWorker::produceDetail, workerA);
 	
-	workerB = std::make_shared<DetailWorker<DetailB>>("Worker B", 2, semaphores[1].get());
-	detailWorkerThreads.emplace_back(&DetailWorker<DetailB>::produceDetail, workerB.get());
+	workerB = std::make_shared<DetailWorker>("Worker B", 2, semaphores[1]);
+	detailWorkerThreads.emplace_back(&DetailWorker::produceDetail, workerB);
 
-	workerC = std::make_shared<DetailWorker<DetailC>>("Worker C", 3, semaphores[2].get());
-	detailWorkerThreads.emplace_back(&DetailWorker<DetailC>::produceDetail, workerC.get());
+	workerC = std::make_shared<DetailWorker>("Worker C", 3, semaphores[2]);
+	detailWorkerThreads.emplace_back(&DetailWorker::produceDetail, workerC);
 
-	
 	for (auto& detailWorkerThread : detailWorkerThreads)
 	{
 		detailWorkerThread.join();
@@ -42,25 +36,17 @@ void Factory::detailConsumer() const
 	while (programHasToRun())
 	{
 		printf("[DetailConsumer] Waiting for details...\n");
-		for (auto& semaphore : semaphores)
-		{
-			semaphore->acquire();
-		}
+		semaphores[0]->acquire();
+		semaphores[1]->acquire();
 
-		auto detailA = workerA->popDetail();
-		auto detailB = workerB->popDetail();
-		auto detailC = workerC->popDetail();
-		if (!detailA.has_value() || !detailB.has_value() || !detailC.has_value())
-		{
-			throw std::runtime_error("Semaphore was acquired, but detail is missing.");
-		}
-
-		Module module(detailA.value(), detailB.value());
+		workerA->popDetail();
+		workerB->popDetail();
 		printf("[DetailConsumer] Module from details A and B has been created.\n");
 
-		[[maybe_unused]] Widget widget(module, detailC.value());
-		printf("[DetailConsumer] Widget is ready.\n");
+		semaphores[2]->acquire();
+		workerC->popDetail();
 
+		printf("[DetailConsumer] Widget is ready.\n");
 		printf("[DetailConsumer] Detail consumed.\n");
 	}
 }
