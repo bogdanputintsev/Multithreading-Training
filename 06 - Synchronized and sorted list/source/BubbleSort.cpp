@@ -13,7 +13,7 @@ void BubbleSort::sort(Data* front) const
 	while (firstPointer != nullptr)
 	{
 		Data* secondPointer = firstPointer;
-		setToTheNextPointer(&secondPointer, false);
+		setToTheNextPointer(secondPointer, false);
 
 		while(secondPointer != nullptr)
 		{
@@ -22,10 +22,10 @@ void BubbleSort::sort(Data* front) const
 				swap(firstPointer, secondPointer);
 			}
 
-			setToTheNextPointer(&secondPointer, true);
+			setToTheNextPointer(secondPointer, true);
 		}
 
-		setToTheNextPointer(&firstPointer, true);
+		setToTheNextPointer(firstPointer, true);
 	}
 }
 
@@ -37,9 +37,7 @@ void BubbleSort::sort(Data* front) const
  */
 void BubbleSort::swap(Data* firstPointer, Data* secondPointer)
 {
-	const std::string tmp = firstPointer->getMessage();
-	firstPointer->setMessage(secondPointer->getMessage());
-	secondPointer->setMessage(tmp);
+	Data::swapData(*firstPointer, *secondPointer);
 }
 
 /*
@@ -48,28 +46,28 @@ void BubbleSort::swap(Data* firstPointer, Data* secondPointer)
  * @param pointer - pointer that has to be set to the next
  * @param unlockPointer - if true, the pointer will be unlocked after setting to the next element. Otherwise, new and old pointers will be locked.
  */
-void BubbleSort::setToTheNextPointer(Data** pointer, const bool unlockPointer)
+void BubbleSort::setToTheNextPointer(Data*& pointer, const bool unlockPointer)
 {
-	if ((*pointer)->getNext() == nullptr)
+	if (pointer->getNext() == nullptr)
 	{
 		if(unlockPointer)
 		{
-			(*pointer)->unlock();
+			pointer->unlock();
 		}
 
-		(*pointer) = nullptr;
+		pointer = nullptr;
 		return;
 	}
 
-	(*pointer)->getNext()->lock();
+	pointer->getNext()->lock();
 
 	if (!unlockPointer)
 	{
-		(*pointer) = (*pointer)->getNext();
+		pointer = pointer->getNext();
 		return;
 	}
 
-	Data* pointerToUnlock = *pointer;
-	(*pointer) = (*pointer)->getNext();
+	Data* pointerToUnlock = pointer;
+	pointer = pointer->getNext();
 	pointerToUnlock->unlock();
 }

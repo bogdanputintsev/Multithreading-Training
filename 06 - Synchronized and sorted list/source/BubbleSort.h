@@ -16,6 +16,6 @@ public:
 
 private:
 	static void swap(Data* firstPointer, Data* secondPointer);
-	static void setToTheNextPointer(Data** pointer, const bool unlockPointer);
+	static void setToTheNextPointer(Data*& pointer, const bool unlockPointer);
 };
 

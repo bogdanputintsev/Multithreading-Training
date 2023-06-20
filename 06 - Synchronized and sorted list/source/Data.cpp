@@ -48,3 +48,10 @@ bool operator>(const Data& data1, const Data& data2)
 {
 	return data1.getMessage() > data2.getMessage();
 }
+
+void Data::swapData(Data& data1, Data& data2)
+{
+	std::string temp = std::move(data1.message);
+	data1.message = std::move(data2.message);
+	data2.message = std::move(temp);
+}

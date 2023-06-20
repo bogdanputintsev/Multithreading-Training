@@ -12,6 +12,8 @@ public:
 	std::unique_lock<std::mutex> getUniqueLock();
 	void lock();
 	void unlock();
+	static void swapData(Data& data1, Data& data2);
+
 private:
 	Data* next = nullptr;
 	std::string message;

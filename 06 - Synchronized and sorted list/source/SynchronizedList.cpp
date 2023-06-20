@@ -59,6 +59,7 @@ void SynchronizedList::pushBack(const std::string& line)
  */
 void SynchronizedList::attach(Observer* observer)
 {
+	assert(observer != nullptr);
 	std::lock_guard lock(observersMutex);
 	observers.push_back(observer);
 }
@@ -68,6 +69,7 @@ void SynchronizedList::attach(Observer* observer)
  */
 void SynchronizedList::detach(Observer* observer)
 {
+	assert(observer != nullptr);
 	std::lock_guard lock(observersMutex);
 	observers.remove(observer);
 }
@@ -84,7 +86,6 @@ void SynchronizedList::notify()
 Data* SynchronizedList::getFront() const
 {
 	std::unique_lock sentinelLock(sentinel->getUniqueLock());
-	std::unique_lock frontLock(sentinel->getNext()->getUniqueLock());
 	Data* returnData = sentinel->getNext();
 	return returnData;
 }
