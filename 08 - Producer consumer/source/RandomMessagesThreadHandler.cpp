@@ -27,7 +27,9 @@ void RandomMessagesThreadHandler::startConsuming(std::string&& threadId) const
     {
         auto pop = getQueue()->pop();
         std::string poppedMessage = pop.has_value() ? pop.value() : "[empty]";
+
         printf("[%s]: New message \"%s\" has been popped.\n", threadId.c_str(), poppedMessage.c_str());
+        printf("%s\n", getQueue()->toString().c_str());
         std::this_thread::sleep_for(std::chrono::milliseconds(SLEEP_FOR_MILLISECONDS));
     }
 }
@@ -38,7 +40,9 @@ void RandomMessagesThreadHandler::startProducing(std::string&& threadId) const
     {
         const std::string newRandomMessage{ generateRandomMessage() };
         getQueue()->push(newRandomMessage);
+
         printf("[%s]: New message \"%s\" has been pushed.\n", threadId.c_str(), newRandomMessage.c_str());
+        printf("%s\n", getQueue()->toString().c_str());
         std::this_thread::sleep_for(std::chrono::milliseconds(SLEEP_FOR_MILLISECONDS));
     }
 }
