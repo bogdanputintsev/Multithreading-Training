@@ -151,15 +151,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="source\ThreadManager.cpp" />
+    <ClCompile Include="source\RandomMessagesThreadHandler.cpp" />
     <ClCompile Include="source\main.cpp" />
     <ClCompile Include="source\Node.cpp" />
     <ClCompile Include="source\MessageQueue.cpp" />
+    <ClCompile Include="source\ThreadHandler.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="source\ThreadManager.h" />
+    <ClInclude Include="source\RandomMessagesThreadHandler.h" />
     <ClInclude Include="source\Node.h" />
     <ClInclude Include="source\MessageQueue.h" />
+    <ClInclude Include="source\ThreadHandler.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

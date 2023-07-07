@@ -5,6 +5,9 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
+    <Filter Include="Interfaces">
+      <UniqueIdentifier>{af9a1d17-bed1-4cf1-8371-90936c331c34}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\main.cpp">
@@ -16,8 +19,11 @@
     <ClCompile Include="source\Node.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\ThreadManager.cpp">
+    <ClCompile Include="source\RandomMessagesThreadHandler.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\ThreadHandler.cpp">
+      <Filter>Interfaces</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -27,8 +33,11 @@
     <ClInclude Include="source\Node.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="source\ThreadManager.h">
+    <ClInclude Include="source\RandomMessagesThreadHandler.h">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\ThreadHandler.h">
+      <Filter>Interfaces</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
