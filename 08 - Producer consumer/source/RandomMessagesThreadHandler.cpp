@@ -49,7 +49,7 @@ void RandomMessagesThreadHandler::startProducing(std::string&& threadId) const
 
 std::string RandomMessagesThreadHandler::generateRandomMessage()
 {
-    const std::string charset = R"(abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()-_=+)";
+    const std::string charset{ R"(abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()-_=+)" };
     std::string randomString;
 
     std::random_device rd;
